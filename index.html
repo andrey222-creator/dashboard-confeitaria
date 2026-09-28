@@ -1,0 +1,623 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Painel Confeitaria — ChokDoce</title><style>:root{color-scheme:dark;box-sizing:border-box}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif}img{max-width:100%}</style></head><body>
+<style>
+:root{
+  --bg:#1B140E; --surface:#241A12; --surface-sunken:#2E2117;
+  --ink:#F3EAE0; --ink-soft:rgba(243,234,224,.72); --ink-faint:rgba(243,234,224,.48);
+  --border:rgba(243,234,224,.14); --border-strong:rgba(243,234,224,.24);
+  --accent:#D89A5A; --accent-ink:#241A12; --accent-2:#D89A5A;
+  --good:#4FBFAC; --good-bg:rgba(79,191,172,.14);
+  --bad:#E28575; --bad-bg:rgba(226,133,117,.14);
+  --warn:#E0B15E; --warn-bg:rgba(224,177,94,.14);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 24px -14px rgba(0,0,0,.5);
+  color-scheme: dark;
+}
+*{box-sizing:border-box;}
+body{background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-system,sans-serif;line-height:1.5;padding:0 16px;}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 0 60px;}
+h1,h2,h3{font-family:'Sora',sans-serif;font-weight:700;letter-spacing:-.01em;text-wrap:balance;margin:0;}
+table{font-variant-numeric:tabular-nums;border-collapse:collapse;width:100%;}
+
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;padding-bottom:18px;border-bottom:2px solid var(--accent);margin-bottom:24px;}
+header.top .top-left{display:flex;align-items:center;gap:14px;}
+.brand-logo{height:52px;width:auto;object-fit:contain;flex-shrink:0;}
+header.top .eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent-2);margin-bottom:4px;}
+header.top h1{font-size:1.7rem;color:var(--accent);}
+header.top .meta{font-size:.8rem;color:var(--ink-faint);text-align:right;}
+
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;box-shadow:var(--shadow);}
+.kpi .lbl{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);font-weight:600;margin-bottom:8px;}
+.kpi .val{font-family:'Sora',sans-serif;font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;}
+.kpi .sub{font-size:.76rem;color:var(--ink-soft);margin-top:4px;}
+.kpi .sub.good{color:var(--good);font-weight:600;}
+.kpi .sub.bad{color:var(--bad);font-weight:600;}
+
+section{margin-bottom:30px;}
+section > h2{font-size:1.05rem;margin-bottom:2px;}
+section > .section-sub{font-size:.82rem;color:var(--ink-faint);margin-bottom:14px;}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);padding:18px;}
+
+.trend-card{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:center;}
+.trend-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:.76rem;color:var(--ink-soft);}
+.trend-legend span{display:inline-flex;align-items:center;gap:6px;}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+.trend-side .row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px dashed var(--border);font-size:.86rem;}
+.trend-side .row:last-child{border-bottom:none;}
+.trend-side .row .m{color:var(--ink-soft);}
+.trend-side .row .v{font-weight:700;font-variant-numeric:tabular-nums;}
+.trend-side .row .d{font-size:.72rem;margin-left:6px;}
+
+table.data{font-size:.85rem;}
+table.data th{text-align:right;font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);font-weight:700;padding:8px 10px;border-bottom:1px solid var(--border-strong);position:sticky;top:0;background:var(--surface);}
+table.data th:first-child, table.data td:first-child{text-align:left;}
+table.data td{padding:7px 10px;border-bottom:1px solid var(--border);}
+table.data tr:last-child td{border-bottom:none;}
+table.data tr:nth-child(even) td{background:var(--surface-sunken);}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:700;padding:2px 7px;border-radius:99px;white-space:nowrap;}
+.tag.good{background:var(--good-bg);color:var(--good);}
+.tag.bad{background:var(--bad-bg);color:var(--bad);}
+.tag.warn{background:var(--warn-bg);color:var(--warn);}
+.scroll-table{max-height:640px;overflow-y:auto;border-radius:10px;}
+.scroll-table::-webkit-scrollbar{width:8px;}
+.scroll-table::-webkit-scrollbar-track{background:transparent;}
+.scroll-table::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:99px;}
+.scroll-table::-webkit-scrollbar-thumb:hover{background:var(--ink-faint);}
+
+.secao-list-head{display:grid;grid-template-columns:1fr 84px 84px 96px 96px;gap:8px;padding:9px 14px;font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-faint);font-weight:700;border-bottom:1px solid var(--border-strong);position:sticky;top:0;background:var(--surface);z-index:1;}
+.secao-list-head span{text-align:right;}
+.secao-list-head span:first-child{text-align:left;}
+details.secao-item{border-bottom:1px solid var(--border);}
+details.secao-item:last-child{border-bottom:none;}
+details.secao-item summary{display:grid;grid-template-columns:1fr 84px 84px 96px 96px;gap:8px;padding:9px 14px;cursor:pointer;list-style:none;align-items:center;font-size:.85rem;}
+details.secao-item summary::-webkit-details-marker{display:none;}
+details.secao-item summary .sname{font-weight:600;text-align:left;display:flex;align-items:center;gap:6px;}
+details.secao-item summary .sname .arrow{display:inline-block;font-size:.65rem;color:var(--ink-faint);transition:transform .15s;flex-shrink:0;}
+details.secao-item[open] summary .sname .arrow{transform:rotate(90deg);}
+details.secao-item summary .sval{text-align:right;font-variant-numeric:tabular-nums;}
+details.secao-item:nth-child(even) summary{background:var(--surface-sunken);}
+details.secao-item .grp-wrap{padding:0 14px 10px 34px;}
+table.grp-table td{padding:4px 8px;border-bottom:1px dashed var(--border);color:var(--ink-soft);font-size:.78rem;}
+table.grp-table td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums;width:84px;}
+table.grp-table tr:last-child td{border-bottom:none;}
+
+.mover-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.mover-card h3{font-size:.82rem;text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.mover-item{display:grid;grid-template-columns:1fr auto;gap:2px 10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.mover-item:last-child{border-bottom:none;}
+.mover-item .nm{font-size:.82rem;font-weight:600;}
+.mover-item .fig{font-size:.82rem;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;}
+.mover-item .bar-track{grid-column:1/-1;height:5px;border-radius:99px;background:var(--surface-sunken);overflow:hidden;margin-top:2px;}
+.mover-item .bar-fill{height:100%;border-radius:99px;}
+.mover-item .sub{grid-column:1/-1;font-size:.72rem;color:var(--ink-faint);}
+
+.alert{display:flex;gap:12px;background:var(--warn-bg);border:1px solid color-mix(in srgb, var(--warn) 45%, transparent);border-radius:10px;padding:14px 16px;font-size:.84rem;color:var(--ink);}
+.alert .icon{font-size:1.1rem;flex-shrink:0;}
+.alert b{color:var(--warn);}
+
+.proj-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.proj-grid .big{font-family:'Sora',sans-serif;font-size:2.1rem;font-weight:700;color:var(--accent);}
+.proj-grid .range{font-size:.85rem;color:var(--ink-soft);margin-top:2px;}
+.method-list{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;}
+.method-list li{font-size:.82rem;color:var(--ink-soft);padding-left:18px;position:relative;}
+.method-list li::before{content:"→";position:absolute;left:0;color:var(--accent-2);font-weight:700;}
+
+footer{border-top:1px solid var(--border);padding-top:14px;margin-top:10px;font-size:.72rem;color:var(--ink-faint);}
+
+@media (max-width:820px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr);}
+  .trend-card, .mover-grid, .proj-grid{grid-template-columns:1fr;}
+  header.top .meta{text-align:left;}
+  .secao-list-head, details.secao-item summary{grid-template-columns:1fr 60px 60px 68px 76px;font-size:.72rem;}
+  .brand-logo{height:40px;}
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600;700&display=swap">
+
+<div class="wrap">
+
+  <header class="top">
+    <div class="top-left">
+      <img src="assets/logo_dash.png" alt="ChokDoce" class="brand-logo">
+      <div>
+        <div class="eyebrow">Relatório gerencial · ChokDoce</div>
+        <h1>Departamento Confeitaria — Análise Trimestral</h1>
+      </div>
+    </div>
+    <div class="meta">Último trimestre (Jun–Ago/2026) + Setembro/2026 até 26/09<br>Fonte: Oracle Arius (VENDAS_DIARIAS)</div>
+  </header>
+
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="lbl">Faturamento Set/26 (até 26/09)</div>
+      <div class="val">R$ 2.359.332</div>
+      <div class="sub good">+45,8% vs. mesmo período de 2025</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Projeção de fechamento — Set/26</div>
+      <div class="val">R$ 2,70–2,75 mi</div>
+      <div class="sub good">+22% a +24% vs. Set/25 completo</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Variação Julho → Agosto</div>
+      <div class="val">−4,1%</div>
+      <div class="sub">R$ 2.724.552 → R$ 2.614.058</div>
+    </div>
+    <div class="kpi">
+      <div class="lbl">Maior fornecedor do trimestre</div>
+      <div class="val">Barry Callebaut</div>
+      <div class="sub good">+32,8% (projeção ago→set)</div>
+    </div>
+  </div>
+
+  <section>
+    <h2>Visão geral — todos os fornecedores</h2>
+    <div class="section-sub">Confeitaria, últimos 4 meses (jun–set/26) · 51 fornecedores com faturamento relevante no trimestre · crescimento = set/26 (projetado p/ mês cheio) vs. média do trimestre jun–ago · ordenado por volume em setembro</div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div class="scroll-table">
+        <table class="data">
+          <thead><tr><th>Fornecedor</th><th>Jun/26</th><th>Jul/26</th><th>Ago/26</th><th>Set/26 (proj.)</th><th>Cresc.</th></tr></thead>
+          <tbody>
+          <tr><td>BARRY CALLEBAUT BRASIL IND COM DE PROD ALIM LTDA</td><td>799.908</td><td>804.466</td><td>710.873</td><td>944.265</td><td><span class="tag good">+22,4%</span></td></tr>
+          <tr><td>UNIGRA BRASIL INDUSTRIA E COMERCIO DE PRODUTOS ALIMENTICIOS LTDA</td><td>255.386</td><td>245.354</td><td>206.035</td><td>235.078</td><td><span class="tag warn">−0,2%</span></td></tr>
+          <tr><td>HARALD IND E COM DE ALIMENTOS LTDA</td><td>167.478</td><td>151.006</td><td>150.074</td><td>191.935</td><td><span class="tag good">+22,9%</span></td></tr>
+          <tr><td>NESTLE DO BRASIL LTDA</td><td>180.606</td><td>269.635</td><td>303.576</td><td>191.232</td><td><span class="tag bad">−23,9%</span></td></tr>
+          <tr><td>CARINO INGREDIENTES LTDA</td><td>90.426</td><td>117.167</td><td>121.793</td><td>113.667</td><td><span class="tag warn">+3,5%</span></td></tr>
+          <tr><td>DISTRIBUIDORA DE PROD ALIM MARSIL LTDA</td><td>85.220</td><td>104.284</td><td>120.529</td><td>105.901</td><td><span class="tag warn">+2,5%</span></td></tr>
+          <tr><td>RIBERFOODS IMP DIST PROS ALIM LTDA</td><td>66.204</td><td>190.816</td><td>148.431</td><td>85.351</td><td><span class="tag bad">−36,8%</span></td></tr>
+          <tr><td>CACAU FOODS DO BRASIL ALIMENTOS LTDA</td><td>56.814</td><td>80.607</td><td>81.578</td><td>78.353</td><td><span class="tag good">+7,3%</span></td></tr>
+          <tr><td>COOPERATIVA CENTRAL MINEIRA DE LATICINIOS LTDA</td><td>103.496</td><td>117.777</td><td>60.623</td><td>71.046</td><td><span class="tag bad">−24,4%</span></td></tr>
+          <tr><td>LUIZ TONIN ATACADISTA E SUPERMERCADOS S/A</td><td>41.562</td><td>44.089</td><td>93.293</td><td>64.907</td><td><span class="tag good">+8,8%</span></td></tr>
+          <tr><td>JUNCO INDUSTRIA E COMERCIO LTDA</td><td>42.980</td><td>60.783</td><td>51.402</td><td>55.770</td><td><span class="tag good">+7,8%</span></td></tr>
+          <tr><td>INDUSTRIA E COMERCIO MARVI LTDA</td><td>33.212</td><td>49.291</td><td>56.422</td><td>54.538</td><td><span class="tag good">+17,8%</span></td></tr>
+          <tr><td>MAGO IND E COM DE ARTEFATOS DE PAPEL LTDA</td><td>39.988</td><td>45.462</td><td>43.786</td><td>47.169</td><td><span class="tag good">+9,5%</span></td></tr>
+          <tr><td>DAUS INDUSTRIA DE ALIMENTOS S.A.</td><td>10.916</td><td>30.951</td><td>32.208</td><td>40.699</td><td><span class="tag good">+64,8%</span></td></tr>
+          <tr><td>AB BRASIL INDUSTRIA E COMERCIO DE ALIMENTOS LTDA</td><td>31.823</td><td>33.613</td><td>49.064</td><td>36.567</td><td><span class="tag warn">−4,2%</span></td></tr>
+          <tr><td>DUAS RODAS INDUSTRIAL LTDA</td><td>41.510</td><td>31.780</td><td>30.912</td><td>28.843</td><td><span class="tag bad">−17,0%</span></td></tr>
+          <tr><td>CODAP BRASIL LTDA</td><td>19.592</td><td>21.916</td><td>18.044</td><td>26.936</td><td><span class="tag good">+35,7%</span></td></tr>
+          <tr><td>MOCOCA S/A PRODUTOS ALIMENTICIOS</td><td>10.303</td><td>16.142</td><td>14.056</td><td>22.923</td><td><span class="tag good">+69,8%</span></td></tr>
+          <tr><td>FLORESTA DO RIO DOCE DERIVADOS S/A GRU</td><td>21.081</td><td>23.887</td><td>18.156</td><td>21.749</td><td><span class="tag warn">+3,4%</span></td></tr>
+          <tr><td>JTC DISTRIBUIDORA EIRELI</td><td>17.556</td><td>16.766</td><td>16.490</td><td>18.269</td><td><span class="tag good">+7,9%</span></td></tr>
+          <tr><td>FABRICA DE DOCES LEDUR LTDA</td><td>13.023</td><td>19.066</td><td>22.199</td><td>17.941</td><td><span class="tag warn">−0,9%</span></td></tr>
+          <tr><td>ATACADAO DISTR. COM.IND. LTDA</td><td>17.774</td><td>11.492</td><td>21.604</td><td>17.545</td><td><span class="tag warn">+3,5%</span></td></tr>
+          <tr><td>JUNCO IND E COM LTDA</td><td>19.055</td><td>27.144</td><td>29.239</td><td>16.670</td><td><span class="tag bad">−33,7%</span></td></tr>
+          <tr><td>HECKE REPRESENTACOES COMERCIAIS LTDA</td><td>2.368</td><td>9.070</td><td>10.614</td><td>15.907</td><td><span class="tag good">+116,4%</span></td></tr>
+          <tr><td>JATHIVI COM RIB DE ALIM E BEB LTDA ME</td><td>18.319</td><td>8.484</td><td>8.854</td><td>15.053</td><td><span class="tag good">+26,7%</span></td></tr>
+          <tr><td>POMPEIA S/A IND E COMERCIO</td><td>8.742</td><td>10.348</td><td>17.021</td><td>13.286</td><td><span class="tag good">+10,4%</span></td></tr>
+          <tr><td>ZD ALIMENTOS S A</td><td>2.422</td><td>9.835</td><td>11.167</td><td>11.594</td><td><span class="tag good">+48,5%</span></td></tr>
+          <tr><td>DORI ALIMENTOS LTDA</td><td>18.669</td><td>14.717</td><td>9.467</td><td>11.482</td><td><span class="tag bad">−19,6%</span></td></tr>
+          <tr><td>FESTCENTER COMERCIO DE ARTIGOS PARA FESTAS LTDA ME (HOMERO)</td><td>9.762</td><td>13.035</td><td>11.880</td><td>11.260</td><td><span class="tag warn">−2,6%</span></td></tr>
+          <tr><td>ARCO IRIS BRASIL IND E COM PROD ALIM LTDA</td><td>12.595</td><td>10.992</td><td>11.948</td><td>10.907</td><td><span class="tag bad">−7,9%</span></td></tr>
+          <tr><td>ROLDAN INDUSTRIA E COMERCIO DE ARTIGOS EM ALUMINIO LTDA</td><td>1.102</td><td>5.844</td><td>3.596</td><td>5.934</td><td><span class="tag good">+68,9%</span></td></tr>
+          <tr><td>GOIASMINAS INDUSTRIA DE LATICINIOS LTDA</td><td>39.059</td><td>41.741</td><td>34.441</td><td>5.843</td><td><span class="tag bad">−84,8%</span></td></tr>
+          <tr><td>DISTRIBUIDORA PADRAO FONZAR LTDA</td><td>3.501</td><td>5.127</td><td>5.231</td><td>5.706</td><td><span class="tag good">+23,5%</span></td></tr>
+          <tr><td>CHOK DISTRIBUIDORA DE ALIMENTOS LTDA</td><td>4.277</td><td>7.496</td><td>5.070</td><td>4.786</td><td><span class="tag bad">−14,8%</span></td></tr>
+          <tr><td>ICEBERG INDUSTRIA E COMERCIO LTDA</td><td>3.600</td><td>5.266</td><td>4.432</td><td>4.232</td><td><span class="tag warn">−4,5%</span></td></tr>
+          <tr><td>IN LOCO FOODS COMERCIO DE PRODUTOS ALIMENTICIOS LTDA</td><td>5.538</td><td>4.581</td><td>5.696</td><td>4.196</td><td><span class="tag bad">−20,4%</span></td></tr>
+          <tr><td>S E P COMERCIO DE PRODUTOS NATURAIS LTDA</td><td>3.792</td><td>4.781</td><td>4.399</td><td>3.864</td><td><span class="tag bad">−10,6%</span></td></tr>
+          <tr><td>VALE FORTE DO BRASIL LTDA</td><td>2.567</td><td>1.936</td><td>5.281</td><td>3.398</td><td><span class="tag warn">+4,2%</span></td></tr>
+          <tr><td>JOSE ROBERTO CENSAO</td><td>2.309</td><td>1.118</td><td>2.492</td><td>3.191</td><td><span class="tag good">+61,7%</span></td></tr>
+          <tr><td>DAURITI DISTRIBUIDORA DE ALIMENTOS SA</td><td>9.262</td><td>6.420</td><td>7.001</td><td>3.081</td><td><span class="tag bad">−59,2%</span></td></tr>
+          <tr><td>GENERAL BRANDS DO BRASIL DISTR DE PRODS ALIMENTICIOS LTDA</td><td>2.570</td><td>3.386</td><td>2.054</td><td>2.793</td><td><span class="tag warn">+4,6%</span></td></tr>
+          <tr><td>INGA IMPORT LTDA</td><td>1.204</td><td>2.392</td><td>4.279</td><td>2.778</td><td><span class="tag good">+5,8%</span></td></tr>
+          <tr><td>BALMIS INDUSTRIAL EIRELI</td><td>0</td><td>0</td><td>6.159</td><td>2.683</td><td><span class="tag good">+30,7%</span></td></tr>
+          <tr><td>DOUPAN INDUSTRIA E COMERCIO DE PRODUTOS PARA PANIFICACAO LTD</td><td>5.416</td><td>3.728</td><td>1.850</td><td>2.642</td><td><span class="tag bad">−27,9%</span></td></tr>
+          <tr><td>LOURENCO DISTRIBUIDORA DE ALIMENTOS LTDA</td><td>2.840</td><td>2.271</td><td>1.816</td><td>2.528</td><td><span class="tag good">+9,5%</span></td></tr>
+          <tr><td>FERREIRA &amp; LOURENCON INDUSTRIA E COM DE PROD. ALIM. E BEB. L</td><td>2.523</td><td>2.525</td><td>2.390</td><td>2.332</td><td><span class="tag bad">−5,9%</span></td></tr>
+          <tr><td>FLORESTA DO RIO DOCE AGRO DERIVADOS S/A</td><td>5.886</td><td>3.564</td><td>1.968</td><td>1.336</td><td><span class="tag bad">−64,9%</span></td></tr>
+          <tr><td>BLUESTARNET INDUSTRIA PLASTICA LTDA EPP</td><td>3.897</td><td>2.823</td><td>1.657</td><td>1.202</td><td><span class="tag bad">−57,0%</span></td></tr>
+          <tr><td>METALURGICA METASAD LTDA</td><td>947</td><td>958</td><td>8.269</td><td>380</td><td><span class="tag bad">−88,8%</span></td></tr>
+          <tr><td>BASE ALIMENTOS BRASIL LTDA</td><td>3.029</td><td>3.261</td><td>159</td><td>82</td><td><span class="tag bad">−96,2%</span></td></tr>
+          <tr><td>ITAMBE ALIMENTOS S/A</td><td>7.109</td><td>1.453</td><td>207</td><td>0</td><td><span class="tag bad">−100,0%</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Faturamento mensal do departamento</h2>
+    <div class="section-sub">5 lojas físicas + E-commerce · último trimestre completo (jun–ago) + setembro parcial (23 dias) e projeção de fechamento</div>
+    <div class="card trend-card">
+      <svg viewBox="0 0 520 260" style="width:100%;height:auto;overflow:visible;" role="img" aria-label="Gráfico de barras do faturamento mensal">
+        <g stroke="var(--border)" stroke-width="1">
+          <line x1="60" y1="20" x2="60" y2="210"/>
+          <line x1="60" y1="210" x2="500" y2="210"/>
+        </g>
+        <g font-family="Inter,sans-serif" font-size="10" fill="var(--ink-faint)">
+          <text x="54" y="24" text-anchor="end">3,0mi</text>
+          <text x="54" y="90" text-anchor="end">2,0mi</text>
+          <text x="54" y="156" text-anchor="end">1,0mi</text>
+          <text x="54" y="214" text-anchor="end">0</text>
+        </g>
+        <g stroke="var(--border)" stroke-width="1" stroke-dasharray="2 4">
+          <line x1="60" y1="24" x2="500" y2="24"/>
+          <line x1="60" y1="90" x2="500" y2="90"/>
+          <line x1="60" y1="156" x2="500" y2="156"/>
+        </g>
+        <rect x="75" y="60.1" width="60" height="149.9" rx="4" fill="var(--accent)"/>
+        <text x="105" y="52.1" text-anchor="middle" font-family="Sora,sans-serif" font-weight="700" font-size="12" fill="var(--ink)">2,37mi</text>
+        <text x="105" y="228" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--ink-soft)">Jun/26</text>
+        <rect x="175" y="37.4" width="60" height="172.6" rx="4" fill="var(--accent)"/>
+        <text x="205" y="29.4" text-anchor="middle" font-family="Sora,sans-serif" font-weight="700" font-size="12" fill="var(--ink)">2,72mi</text>
+        <text x="205" y="228" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--ink-soft)">Jul/26</text>
+        <rect x="275" y="44.4" width="60" height="165.6" rx="4" fill="var(--accent)"/>
+        <text x="305" y="36.4" text-anchor="middle" font-family="Sora,sans-serif" font-weight="700" font-size="12" fill="var(--ink)">2,61mi</text>
+        <text x="305" y="228" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--ink-soft)">Ago/26</text>
+        <rect x="375" y="60.6" width="60" height="149.4" rx="4" fill="var(--accent)"/>
+        <rect x="375" y="37.4" width="60" height="23.2" rx="3" fill="var(--accent-2)" opacity=".85"/>
+        <text x="405" y="29.4" text-anchor="middle" font-family="Sora,sans-serif" font-weight="700" font-size="12" fill="var(--ink)">2,73mi</text>
+        <text x="405" y="228" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="var(--ink-soft)">Set/26 (26d)</text>
+      </svg>
+      <div class="trend-side">
+        <div class="row"><span class="m">Junho/26</span><span class="v">R$ 2.367.587</span></div>
+        <div class="row"><span class="m">Julho/26</span><span class="v">R$ 2.724.552 <span class="tag good d">+15,1%</span></span></div>
+        <div class="row"><span class="m">Agosto/26</span><span class="v">R$ 2.614.058 <span class="tag bad d">−4,1%</span></span></div>
+        <div class="row"><span class="m">Setembro/26 (1–26)</span><span class="v">R$ 2.359.332</span></div>
+        <div class="row"><span class="m">Set/25 mesmo período</span><span class="v">R$ 1.618.262 <span class="tag good d">+45,8%</span></span></div>
+        <div class="row"><span class="m">Set/25 completo</span><span class="v">R$ 2.210.607</span></div>
+        <div class="row"><span class="m">Projeção fechamento Set/26</span><span class="v">R$ 2,70–2,75 mi</span></div>
+      </div>
+    </div>
+    <div class="trend-legend">
+      <span><i class="dot" style="background:var(--accent);"></i> Realizado</span>
+      <span><i class="dot" style="background:var(--accent-2);"></i> Projeção dos dias restantes (27–30/09)</span>
+    </div>
+  </section>
+
+  <section>
+    <h2>Faturamento por seção — dentro de Confeitaria</h2>
+    <div class="section-sub">Todas as 21 seções do departamento, com seus grupos · clique numa seção para expandir os grupos · Jul/26 → Ago/26 → Set/26 (parcial, 23 dias) · ordenado por faturamento</div>
+    <div class="card" style="padding:0;overflow:hidden;">
+      <div class="secao-list-head"><span>Seção / Grupo</span><span>Jul/26</span><span>Ago/26</span><span>Set/26 (23d)</span><span>Tendência</span></div>
+      <div class="scroll-table" style="max-height:420px;">
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Chocolates</span><span class="sval">994.410</span><span class="sval">878.644</span><span class="sval">896.169</span><span class="tag warn">estável</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>Gota</td><td>440.267</td><td>122.687</td><td>427.595</td></tr>
+          <tr><td>Barra</td><td>234.891</td><td>479.207</td><td>274.202</td></tr>
+          <tr><td>Po</td><td>236.679</td><td>217.075</td><td>143.177</td></tr>
+          <tr><td>Granulado</td><td>75.279</td><td>56.299</td><td>45.179</td></tr>
+          <tr><td>(Sem grupo)</td><td>7.295</td><td>3.376</td><td>6.017</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Coberturas</span><span class="sval">500.299</span><span class="sval">504.019</span><span class="sval">471.525</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>Barra</td><td>137.119</td><td>173.617</td><td>191.062</td></tr>
+          <tr><td>(Sem grupo)</td><td>177.514</td><td>144.378</td><td>156.545</td></tr>
+          <tr><td>Gota</td><td>102.009</td><td>156.196</td><td>99.240</td></tr>
+          <tr><td>Chips</td><td>63.444</td><td>4.328</td><td>6.251</td></tr>
+          <tr><td>Sorvete</td><td>15.452</td><td>19.868</td><td>11.604</td></tr>
+          <tr><td>Pedacos</td><td>4.224</td><td>5.157</td><td>6.377</td></tr>
+          <tr><td>Granulado</td><td>402</td><td>375</td><td>334</td></tr>
+          <tr><td>Po</td><td>135</td><td>100</td><td>112</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Recheios Prontos</span><span class="sval">462.167</span><span class="sval">443.142</span><span class="sval">326.522</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>Avela</td><td>295.991</td><td>282.213</td><td>192.509</td></tr>
+          <tr><td>(Sem grupo)</td><td>92.924</td><td>90.802</td><td>70.956</td></tr>
+          <tr><td>Brigadeiro Pronto</td><td>38.045</td><td>33.678</td><td>27.902</td></tr>
+          <tr><td>Chocolate</td><td>17.037</td><td>16.097</td><td>16.969</td></tr>
+          <tr><td>Ninho</td><td>14.873</td><td>14.565</td><td>13.519</td></tr>
+          <tr><td>Pasta</td><td>3.218</td><td>5.678</td><td>3.738</td></tr>
+          <tr><td>Bueno</td><td>0</td><td>0</td><td>446</td></tr>
+          <tr><td>Pistache</td><td>0</td><td>0</td><td>443</td></tr>
+          <tr><td>Geleias</td><td>40</td><td>90</td><td>40</td></tr>
+          <tr><td>Creme</td><td>40</td><td>20</td><td>0</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Leites</span><span class="sval">320.982</span><span class="sval">322.697</span><span class="sval">246.186</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>Condensado</td><td>190.331</td><td>181.288</td><td>143.821</td></tr>
+          <tr><td>Creme</td><td>71.560</td><td>75.159</td><td>49.118</td></tr>
+          <tr><td>Po</td><td>57.419</td><td>63.089</td><td>50.949</td></tr>
+          <tr><td>Coco</td><td>1.667</td><td>3.160</td><td>2.298</td></tr>
+          <tr><td>(Sem grupo)</td><td>6</td><td>0</td><td>0</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Misturas</span><span class="sval">196.342</span><span class="sval">205.312</span><span class="sval">185.348</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>Chantiliy</td><td>120.842</td><td>131.108</td><td>116.873</td></tr>
+          <tr><td>(Sem grupo)</td><td>34.626</td><td>38.106</td><td>34.532</td></tr>
+          <tr><td>Sorvete</td><td>32.686</td><td>27.628</td><td>26.366</td></tr>
+          <tr><td>Bolo</td><td>2.376</td><td>2.764</td><td>2.167</td></tr>
+          <tr><td>Gelatina</td><td>2.661</td><td>1.903</td><td>2.222</td></tr>
+          <tr><td>Mousse</td><td>2.060</td><td>2.293</td><td>1.731</td></tr>
+          <tr><td>Glace</td><td>827</td><td>1.048</td><td>1.008</td></tr>
+          <tr><td>Pasta Americana</td><td>105</td><td>304</td><td>249</td></tr>
+          <tr><td>Maria Mole</td><td>119</td><td>137</td><td>68</td></tr>
+          <tr><td>Marshmallow</td><td>0</td><td>20</td><td>60</td></tr>
+          <tr><td>Creme Culinario</td><td>0</td><td>0</td><td>60</td></tr>
+          <tr><td>Pudim</td><td>41</td><td>0</td><td>12</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Confeitos</span><span class="sval">86.511</span><span class="sval">91.516</span><span class="sval">89.721</span><span class="tag warn">estável</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>Granulado</td><td>33.707</td><td>39.787</td><td>39.677</td></tr>
+          <tr><td>Confete</td><td>23.581</td><td>24.229</td><td>25.828</td></tr>
+          <tr><td>(Sem grupo)</td><td>22.976</td><td>20.318</td><td>19.202</td></tr>
+          <tr><td>Cereal</td><td>3.526</td><td>4.262</td><td>2.917</td></tr>
+          <tr><td>Micangas</td><td>2.721</td><td>2.920</td><td>2.096</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Utensilios</span><span class="sval">45.258</span><span class="sval">51.309</span><span class="sval">37.485</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>(Sem grupo)</td><td>22.147</td><td>20.494</td><td>19.612</td></tr>
+          <tr><td>Formas</td><td>11.389</td><td>18.697</td><td>9.329</td></tr>
+          <tr><td>Bicos</td><td>6.888</td><td>7.502</td><td>4.848</td></tr>
+          <tr><td>Espatulas</td><td>2.081</td><td>2.514</td><td>2.066</td></tr>
+          <tr><td>Cortadores</td><td>1.126</td><td>661</td><td>656</td></tr>
+          <tr><td>Pinceis</td><td>689</td><td>665</td><td>545</td></tr>
+          <tr><td>Batedor</td><td>360</td><td>308</td><td>85</td></tr>
+          <tr><td>Marcadores</td><td>111</td><td>155</td><td>198</td></tr>
+          <tr><td>Raspadores E Raladores</td><td>191</td><td>206</td><td>62</td></tr>
+          <tr><td>Ejetor</td><td>201</td><td>84</td><td>84</td></tr>
+          <tr><td>Derretedeiras P/ Chocolate</td><td>41</td><td>25</td><td>0</td></tr>
+          <tr><td>Tabua Mdf</td><td>22</td><td>0</td><td>0</td></tr>
+          <tr><td>Boleadora</td><td>12</td><td>0</td><td>0</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Corantes</span><span class="sval">32.714</span><span class="sval">28.975</span><span class="sval">27.797</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>Gel</td><td>16.043</td><td>14.700</td><td>15.417</td></tr>
+          <tr><td>Po</td><td>11.865</td><td>9.372</td><td>7.472</td></tr>
+          <tr><td>Liquido</td><td>3.581</td><td>3.689</td><td>3.579</td></tr>
+          <tr><td>(Sem grupo)</td><td>1.225</td><td>1.215</td><td>1.329</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Frutas E Cereais</span><span class="sval">28.179</span><span class="sval">31.040</span><span class="sval">25.830</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>Seca</td><td>20.154</td><td>23.905</td><td>21.048</td></tr>
+          <tr><td>Calda</td><td>7.906</td><td>7.015</td><td>4.705</td></tr>
+          <tr><td>(Sem grupo)</td><td>119</td><td>121</td><td>78</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Casquinha</span><span class="sval">25.961</span><span class="sval">27.444</span><span class="sval">26.090</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>Casquinha</td><td>12.817</td><td>13.501</td><td>14.263</td></tr>
+          <tr><td>(Sem grupo)</td><td>7.327</td><td>7.961</td><td>6.043</td></tr>
+          <tr><td>Recheada</td><td>5.818</td><td>5.982</td><td>5.784</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Acucares</span><span class="sval">10.458</span><span class="sval">10.412</span><span class="sval">9.088</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>(Sem grupo)</td><td>3.195</td><td>2.964</td><td>2.573</td></tr>
+          <tr><td>Impalpavel</td><td>2.470</td><td>2.396</td><td>2.143</td></tr>
+          <tr><td>Mascavo</td><td>2.096</td><td>2.007</td><td>1.986</td></tr>
+          <tr><td>Refinado</td><td>1.639</td><td>2.010</td><td>1.447</td></tr>
+          <tr><td>Cristal</td><td>1.058</td><td>1.035</td><td>938</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> (Sem seção)</span><span class="sval">6.569</span><span class="sval">7.240</span><span class="sval">6.413</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>(Sem grupo)</td><td>6.569</td><td>7.240</td><td>6.413</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Essencias</span><span class="sval">4.937</span><span class="sval">5.443</span><span class="sval">4.486</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>(Sem grupo)</td><td>4.136</td><td>4.444</td><td>3.776</td></tr>
+          <tr><td>Essencias</td><td>801</td><td>999</td><td>711</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Barquete</span><span class="sval">5.423</span><span class="sval">4.184</span><span class="sval">3.905</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>Barquete</td><td>5.423</td><td>4.184</td><td>3.905</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Fermentos</span><span class="sval">2.129</span><span class="sval">1.805</span><span class="sval">1.659</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>(Sem grupo)</td><td>1.995</td><td>1.426</td><td>1.429</td></tr>
+          <tr><td>Seco</td><td>109</td><td>337</td><td>178</td></tr>
+          <tr><td>Biologico</td><td>25</td><td>42</td><td>52</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Farinhas</span><span class="sval">1.806</span><span class="sval">469</span><span class="sval">736</span><span class="tag good">recuperando</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>Milho</td><td>1.498</td><td>417</td><td>569</td></tr>
+          <tr><td>Trigo</td><td>308</td><td>37</td><td>107</td></tr>
+          <tr><td>(Sem grupo)</td><td>0</td><td>15</td><td>60</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Aditivos Alimentares</span><span class="sval">157</span><span class="sval">137</span><span class="sval">100</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>(Sem grupo)</td><td>157</td><td>137</td><td>100</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Gotas De Licor</span><span class="sval">18</span><span class="sval">180</span><span class="sval">160</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>(Sem grupo)</td><td>18</td><td>180</td><td>160</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Aromas</span><span class="sval">111</span><span class="sval">43</span><span class="sval">61</span><span class="tag good">recuperando</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>(Sem grupo)</td><td>111</td><td>43</td><td>61</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Creme Vegetal</span><span class="sval">75</span><span class="sval">15</span><span class="sval">36</span><span class="tag good">recuperando</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>Desmoldantes</td><td>64</td><td>15</td><td>36</td></tr>
+          <tr><td>(Sem grupo)</td><td>10</td><td>0</td><td>0</td></tr>
+        </tbody></table></div>
+      </details>
+      <details class="secao-item">
+        <summary><span class="sname"><i class="arrow">&#9656;</i> Amido De Milho</span><span class="sval">47</span><span class="sval">33</span><span class="sval">14</span><span class="tag bad">caindo</span></summary>
+        <div class="grp-wrap"><table class="grp-table"><tbody>
+          <tr><td>(Sem grupo)</td><td>47</td><td>33</td><td>14</td></tr>
+        </tbody></table></div>
+      </details>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Fornecedores — quem sobe, quem cai</h2>
+    <div class="section-sub">Crescimento Ago/26 → Set/26 (projetado para mês cheio), fornecedores com faturamento relevante</div>
+    <div class="mover-grid">
+      <div class="card mover-card">
+        <h3 style="color:var(--good);">▲ Subindo</h3>
+        <div class="mover-item">
+          <div class="nm">Barry Callebaut</div><div class="fig" style="color:var(--good);">+32,8%</div>
+          <div class="sub">R$ 710.873 → R$ 944.265 proj.</div>
+          <div class="bar-track"><div class="bar-fill" style="width:33%;background:var(--good);"></div></div>
+        </div>
+        <div class="mover-item">
+          <div class="nm">Harald</div><div class="fig" style="color:var(--good);">+27,9%</div>
+          <div class="sub">R$ 150.074 → R$ 191.935 proj.</div>
+          <div class="bar-track"><div class="bar-fill" style="width:28%;background:var(--good);"></div></div>
+        </div>
+        <div class="mover-item">
+          <div class="nm">Cooperativa Central Mineira (Cemil)</div><div class="fig" style="color:var(--good);">+17,2%</div>
+          <div class="sub">R$ 60.623 → R$ 71.046 proj.</div>
+          <div class="bar-track"><div class="bar-fill" style="width:17%;background:var(--good);"></div></div>
+        </div>
+      </div>
+      <div class="card mover-card">
+        <h3 style="color:var(--bad);">▼ Caindo</h3>
+        <div class="mover-item">
+          <div class="nm">Nestlé</div><div class="fig" style="color:var(--bad);">−37,0%</div>
+          <div class="sub">R$ 303.576 → R$ 191.232 proj.</div>
+          <div class="bar-track"><div class="bar-fill" style="width:37%;background:var(--bad);"></div></div>
+        </div>
+        <div class="mover-item">
+          <div class="nm">Riberfoods</div><div class="fig" style="color:var(--bad);">−42,5%</div>
+          <div class="sub">R$ 148.431 → R$ 85.351 proj.</div>
+          <div class="bar-track"><div class="bar-fill" style="width:43%;background:var(--bad);"></div></div>
+        </div>
+        <div class="mover-item">
+          <div class="nm">Junco</div><div class="fig" style="color:var(--bad);">−43,0%</div>
+          <div class="sub">R$ 29.239 → R$ 16.670 proj.</div>
+          <div class="bar-track"><div class="bar-fill" style="width:43%;background:var(--bad);"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Marcas — quem sobe, quem cai</h2>
+    <div class="section-sub">Mesma base de comparação (Ago/26 → Set/26 projetado), marcas com faturamento acima de R$ 20 mil/mês</div>
+    <div class="mover-grid">
+      <div class="card mover-card">
+        <h3 style="color:var(--good);">▲ Subindo</h3>
+        <div class="mover-item">
+          <div class="nm">Callebaut</div><div class="fig" style="color:var(--good);">+129,7%</div>
+          <div class="sub">R$ 14.813 → R$ 34.033 proj.</div>
+          <div class="bar-track"><div class="bar-fill" style="width:80%;background:var(--good);"></div></div>
+        </div>
+        <div class="mover-item">
+          <div class="nm">Cesibon</div><div class="fig" style="color:var(--good);">+50,5%</div>
+          <div class="sub">R$ 17.807 → R$ 26.802 proj.</div>
+          <div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--good);"></div></div>
+        </div>
+        <div class="mover-item">
+          <div class="nm">Sicao</div><div class="fig" style="color:var(--good);">+35,1%</div>
+          <div class="sub">R$ 647.922 → R$ 875.036 proj. — maior marca do departamento</div>
+          <div class="bar-track"><div class="bar-fill" style="width:35%;background:var(--good);"></div></div>
+        </div>
+      </div>
+      <div class="card mover-card">
+        <h3 style="color:var(--bad);">▼ Caindo</h3>
+        <div class="mover-item">
+          <div class="nm">Garoto</div><div class="fig" style="color:var(--bad);">−67,0%</div>
+          <div class="sub">R$ 170.192 → R$ 56.189 proj.</div>
+          <div class="bar-track"><div class="bar-fill" style="width:67%;background:var(--bad);"></div></div>
+        </div>
+        <div class="mover-item">
+          <div class="nm">Italac</div><div class="fig" style="color:var(--bad);">−57,8%</div>
+          <div class="sub">R$ 82.581 → R$ 34.890 proj.</div>
+          <div class="bar-track"><div class="bar-fill" style="width:58%;background:var(--bad);"></div></div>
+        </div>
+        <div class="mover-item">
+          <div class="nm">Ferrero</div><div class="fig" style="color:var(--bad);">−28,2%</div>
+          <div class="sub">R$ 169.066 → R$ 121.472 proj.</div>
+          <div class="bar-track"><div class="bar-fill" style="width:28%;background:var(--bad);"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Produto — o maior movimento do trimestre</h2>
+    <div class="section-sub">Maior salto individual identificado na base</div>
+    <div class="alert" style="margin-bottom:12px;">
+      <span class="icon">⚠️</span>
+      <div>
+        <b>Provável troca de código de produto, não crescimento de mercado.</b>
+        "Choc Blend Fácil Derretimento 2,05kg Sicao" saltou de R$ 6.737 (ago) para
+        ~R$ 361.103 projetado em setembro (+5.260%), no mesmo mês em que os
+        principais chocolates de derretimento concorrentes desabaram: Choc ao
+        Leite 2,1kg Garoto (−90,1%), Choc Branco Nobre 2,1kg Sicao (−77,8%), Cob
+        Gotas Blend Mais 2,05kg Sicao (−80,0%). O padrão sugere que o mesmo item
+        físico migrou de código no Arius (reembalagem ou reprecificação do
+        fornecedor), não um ganho real de vendas. Antes de tratar isso como
+        decisão comercial, vale confirmar com o comprador se houve troca de
+        embalagem/código nesses itens.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Projeção de fechamento — Setembro/2026</h2>
+    <div class="card proj-grid">
+      <div>
+        <div class="lbl" style="font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);font-weight:600;">Estimativa de fechamento do mês</div>
+        <div class="big">R$ 2,70 – 2,75 milhões</div>
+        <div class="range">+22% a +24% sobre Set/25 (R$ 2.210.607) · probabilidade alta</div>
+        <ul class="method-list">
+          <li>Realizado até 26/09: R$ 2.359.332 (23 dias de venda)</li>
+          <li>Média diária normal: R$ 88.495 (exclui um pico avulso de R$ 412 mil em 18/09)</li>
+          <li>Faltam 3 dias úteis: 28 e 29/09 no ritmo normal, 30/09 com o efeito de fechamento de mês</li>
+          <li>Padrão confirmado nos 2 meses anteriores: último dia do mês vende 2–3× a média diária (31/07 = 1,9×, 31/08 = 2,9×)</li>
+        </ul>
+      </div>
+      <div>
+        <div class="lbl" style="font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-faint);font-weight:600;margin-bottom:8px;">Por que a confiança é alta</div>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin:0 0 10px;">
+          O crescimento parcial de setembro (+45,8% sobre o mesmo período de 2025)
+          já está muito acima da média do trimestre. Mesmo em um cenário
+          conservador, sem repetição do pico de fechamento de mês, o departamento
+          fecharia acima de R$ 2,6 milhões — ainda assim um crescimento de dois
+          dígitos sobre setembro do ano passado.
+        </p>
+        <p style="font-size:.85rem;color:var(--ink-soft);margin:0;">
+          Setembro/25 completo (R$ 2.210.607) já foi superado pelo realizado de
+          2026 com 4 dias de venda ainda por vir.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Fonte: Oracle Arius (PROREG.VENDAS_DIARIAS, join PROREG.PRODUTOS/DEPTOS por departamento,
+    PRODUTOS_FORNECEDOR/FORNECEDORES e MARCAS_PRODUTOS). Comparações de fornecedor/marca usam
+    junho–agosto completos contra setembro projetado para mês cheio (23 dias realizados ×
+    26/23). Faturamento por seção/grupo somado direto de VENDAS_DIARIAS × PRODUTOS × DEPTOS
+    (SECAO/GRUPO), sem filtro de relevância — todas as seções e grupos de Confeitaria estão
+    listados. "Sicao" é marca (Barry Callebaut é o fornecedor cadastrado no Arius para a maior
+    parte dos produtos dessa marca) — por isso aparece separadamente nas duas visões.
+    Documento gerado a partir da análise solicitada em 28/09/2026 — dados sujeitos a
+    atualização conforme o Arius.
+  </footer>
+
+</div>
+
+</body></html>
