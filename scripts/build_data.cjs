@@ -9,7 +9,7 @@ const cfg = JSON.parse(fs.readFileSync("C:/Users/andrey.oliveira/Desktop/Comerci
 const env = cfg.mcpServers["oracle-arius"].env;
 oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 const DEPTO_CONFEITARIA = 1;
-const EMPRESAS = [1, 4, 5, 6, 7, 8];
+const EMPRESAS = [1, 4, 5, 6, 7]; // exclui 8 = Ribeirão Preto
 const MESES_PT = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
 
 function pad(n){ return String(n).padStart(2,"0"); }

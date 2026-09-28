@@ -110,7 +110,7 @@
     moverCard('▼ Caindo', 'var(--bad)', d.marcaMovers.caem);
 
   document.getElementById('footer-text').innerHTML =
-    `Fonte: Oracle Arius (PROREG.VENDAS_DIARIAS, join PROREG.PRODUTOS/DEPTOS por departamento, PRODUTOS_FORNECEDOR/FORNECEDORES e MARCAS_PRODUTOS). ` +
+    `Fonte: Oracle Arius (PROREG.VENDAS_DIARIAS, join PROREG.PRODUTOS/DEPTOS por departamento, PRODUTOS_FORNECEDOR/FORNECEDORES e MARCAS_PRODUTOS). Exclui a loja Ribeirão Preto do comparativo. ` +
     `Consulta ao vivo ao Arius, sem valores fixos — janela de 6 meses completos (${esc(d.periodoLabel)}), sem mês corrente/projeção. ` +
     `Comparações de fornecedor/marca/seção usam 1ª metade vs 2ª metade do semestre. "Sicao" é marca (Barry Callebaut é o fornecedor cadastrado no Arius para a maior parte dos produtos dessa marca). ` +
     `Dados gerados em ${new Date(d.geradoEm).toLocaleString('pt-BR')}.`;
